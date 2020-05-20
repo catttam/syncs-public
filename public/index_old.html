@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <title>My first BootstrapVue app</title>
+
+    <!-- Required Stylesheets -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
+    />
+
+    <!-- Required scripts -->
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+  </head>
+  <body>
+    <!-- Our application root element -->
+    <div id="app">
+      <b-container>
+        <b-jumbotron header="BootstrapVue" lead="Bootstrap 4 Components for Vue.js 2">
+          <p>For more information visit our website</p>
+          <b-btn variant="primary" href="https://bootstrap-vue.js.org/">More Info</b-btn>
+        </b-jumbotron>
+
+        <b-form-group
+          horizontal
+          :label-cols="4"
+          description="Let us know your name."
+          label="Enter your name"
+        >
+          <b-form-input v-model.trim="name"></b-form-input>
+        </b-form-group>
+
+        <b-alert variant="success" :show="showAlert">Bienvenido {{ name }}!</b-alert>
+
+      <div v-show="users.length>0">
+        <b-card title="Listado actual de usuarios">  
+       		<ul>
+        	     <li v-for="user in users">{{user.id}} - {{user.name}}</li>
+      		</ul>
+        </b-card>
+      </div>
+      <b-alert v-if="users.length==0" variant="warning">De momento no hay usuarios registrados.</b-alert>
+        
+
+      </b-container>
+    </div>
+
+    <!-- Start running your app -->
+    <script>
+      window.app  = new Vue({
+        el: '#app',
+        data: {
+          name: '',
+          users: []
+        },
+        created(){
+        	var self = this
+        	var ES = new EventSource('/news')
+
+        	console.log('Creando listener de eventos de servidor...')
+
+           	ES.addEventListener('updates', function(event){
+              	   var data = JSON.parse(JSON.parse(event.data)) //bytes to string -> string to json
+              	   console.log(data)
+              	   self.users.push(data)
+                }, false)
+
+        },
+        computed: {
+          showAlert() {
+            return this.name.length > 4 ? true : false
+          }
+        },
+        mounted(){
+        	var self = this
+                //Inyectamos usuarios actuales en la componente Vuw
+        	fetch('/user').then(function(r){return r.json()})
+        	              .then(function(j){self.users.push(...j.result)})
+        }
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "api-server-example",
+  "version": "1.0.0",
+  "description": "An example in NodeJS",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "twitter",
+    "blogs"
+  ],
+  "author": "Caterina Alarcón, David Tortosa",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.16.0",
+    "express": "^4.16.4",
+    "express-sse": "^0.5.0",
+    "glob": "^7.1.1",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.9.7",
+    "twitter": "^1.7.0"
+  }
+}
